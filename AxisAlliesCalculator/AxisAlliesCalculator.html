@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://192.168.0.27:8000/www/axis_allies_calculator.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+
+	<title>Axis &amp; Allies Calculator</title>
+
+	<script src="jquery.js"></script>
+
+	<style>
+		.container {
+			display: grid;
+			width:100%;
+			height: 100%;
+			margin: 0px;
+			margin-top: 10px;
+			padding: 0px;
+		}
+
+		.row {
+			grid-template-columns: repeat(12, 1fr);
+			display: grid;
+			grid-gap: 5px;
+			grid-auto-rows: minmax(10px, auto); /* Altura mínima de 100px y altura máxima automática */
+		}
+		.col {
+			padding: 5px; /* Añade un padding a cada celda */
+		}
+		.col-1 {
+			grid-column: span 1;
+		}
+		.col-2 {
+			grid-column: span 2;
+		}
+		.col-3 {
+			grid-column: span 3;
+		}
+		.col-4 {
+			grid-column: span 4;
+		}
+		.col-5 {
+			grid-column: span 5;
+		}
+		.col-6 {
+			grid-column: span 6;
+		}
+		.col-7 {
+			grid-column: span 7;
+		}
+		.col-8 {
+			grid-column: span 8;
+		}
+		.col-9 {
+			grid-column: span 9;
+		}
+		.col-10 {
+			grid-column: span 10;
+		}
+		.col-11 {
+			grid-column: span 11;
+		}
+		.col-12 {
+			grid-column: 1 / span 12;
+		}
+
+		body {
+			overflow: hidden;
+			font-family: Arial, sans-serif;
+			background-image: url('./background.png');
+			background-size: cover; /* Ajusta la imagen al tamaño del div */
+			background-position: center; /* Posiciona la imagen en el centro del div */
+			background-repeat: no-repeat; /* Evita que la imagen se repita */
+			width: 100%; /* Establece el ancho de la capa al 100% del contenedor */
+			height: 100%; /* Establece la altura de la capa al 100% del contenedor */
+			margin: 0px;
+			padding: 0px;
+		}
+
+		input {
+			width: 3em;			
+		}
+		.input_battle {
+			margin-left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+
+		}
+		.input_hits {
+			color: red;
+			margin-left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+			font-weight: bold;
+		}
+
+		table {
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+
+		}
+		table.striped {
+			width: 100%;
+			border-collapse: collapse;
+			color: white;
+		}
+
+		table.striped tr:nth-child(even) {
+			background-color: rgba(0, 0, 0, 0.66);
+		}
+
+		table.striped th, table.striped td {
+			padding: 2px;
+			border-bottom: 0px solid #ddd;
+		}
+
+		.table_head {
+			text-align: center;
+		}
+		.table_label {
+
+		}
+		.table_offensive {
+			background-color: #e0666680;
+			z-index: 1000;
+		}
+		.table_defensive {
+			background-color: #6666e080;	
+		}
+
+		
+		h3 {
+			text-align: center;
+			font-family: 'Times New Roman', serif;
+			font-size: 1.5em;
+			margin: 0px;
+			padding: 0px;
+		}
+		.calculate_button {
+			background-color: #bd1c1c;
+			border: none;
+			color: #fff;
+			padding: 6px 12px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 1em;
+			margin: 0px;
+			cursor: pointer;
+			border-radius: 5px;
+			box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+			margin-left: 50%;
+			transform: translateX(-50%);
+			font-family: "Courier New", Courier, monospace;
+			letter-spacing: 2px;
+		}
+
+		.calculate_button:hover {
+			background-color: #530f0f;
+		}
+
+		.btn {
+			font-family: 'Courier New', serif;
+			font-weight: bold;
+			text-align: center;
+			border: none;
+			cursor: pointer;
+			transition: all 0.2s ease-in-out;
+		}
+		.btn-add {
+			background-color: #c1e7c3;
+			color: #2e8b57;
+			float: left;
+		}
+
+		.btn-remove {
+			background-color: #ffbdbd;
+			color: #d63030;
+			float: right;
+		}
+		.btn_col {
+			float: center;
+			text-aling: center;
+		}
+		
+		.title {
+			color: #111;
+			text-align: center;
+			text-shadow: 0px 0px 5px #fff;
+			border: 1px solid black;
+
+			font-family: 'Courier New', serif;	
+			font-size: 1.5em;
+			font-weight: bold;
+			height: 1em;
+
+			margin: 0px;
+			padding: 0px;
+		}
+
+		.configuration {
+			float: right;
+			margin: 0px;
+			padding: 0px;
+			margin-right: 5px;
+			transform: translateY(-5px);
+		}
+		.boton-configuracion {
+			float: right;
+			margin: 0px;
+			padding: 0px;
+		}
+
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.align-center {
+			margin-top:50%;
+			transform: translateY(-50%);
+		}
+
+		.randomness_div {
+			background-color: rgba(255, 255, 255, 0.5);
+			text-align: center;
+			border: 1px solid black;
+			border-radius: 15px;
+			height: 1em;
+			width: 90%;
+			float:right;
+			font-size: 1em;
+			margin-left: 5px;
+		}
+
+		html {
+			position: fixed;
+			height: 100%;
+			width: 100%;
+		}
+	</style>
+
+
+</head>
+
+
+<body>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-2">
+				<button class="calculate_button" onclick="calculate()">Calculate</button>
+			</div>
+			<div class="col-8 title">
+				<span class="">Axis&amp;Allies battle calculator</span>
+			</div>
+			<div class="col-2">
+				<div class="row">
+					<div class="col-8 randomness_div">
+						<span>Battles: <b><span id="randomness_span">1</span></b></span>
+					</div>
+					<div class="col-4" >
+						<div class="configuration">
+							<button id="boton-configuracion" onclick="toggleConfiguration()">
+								<img width="15px" height="15px" src="gear_50px.png">
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" >
+			<div class="col col-6">
+				<!-- OFFENSIVE -->
+				<table class="striped">
+					<thead class="table_offensive">
+						<tr>
+							<th><h3>Offensive</h3></th>
+							<th></th>
+							<th class="table_head">UNITS</th>
+							<th class="table_head">HITS</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="table_label"><label for="offensive_infantry">Infantry</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_infantry">+</button>
+								<button class="btn btn-remove" id="remove_offensive_infantry">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_infantry" id="offensive_infantry"></td>
+							<td><input class="input_hits" type="text" id="offensive_infantry_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_artillery">Artillery</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_artillery">+</button>
+								<button class="btn btn-remove" id="remove_offensive_artillery">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_artillery" id="offensive_artillery"></td>
+							<td><input class="input_hits" type="text" id="offensive_artillery_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_tank">Tank</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_tank">+</button>
+								<button class="btn btn-remove" id="remove_offensive_tank">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_tank" id="offensive_tank"></td>
+							<td><input class="input_hits" type="text" id="offensive_tank_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_fighter">Figther</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_fighter">+</button>
+								<button class="btn btn-remove" id="remove_offensive_fighter">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_fighter" id="offensive_fighter"></td>
+							<td><input class="input_hits" type="text" id="offensive_fighter_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_bomber">Bomber</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_bomber">+</button>
+								<button class="btn btn-remove" id="remove_offensive_bomber">-</button>
+							</td>
+
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_bomber" id="offensive_bomber"></td>
+							<td><input class="input_hits" type="text" id="offensive_bomber_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_submarine">Submarine</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_submarine">+</button>
+								<button class="btn btn-remove" id="remove_offensive_submarine">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_submarine" id="offensive_submarine"></td>
+							<td><input class="input_hits" type="text" id="offensive_submarine_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_destroyer">Destroyer</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_destroyer">+</button>
+								<button class="btn btn-remove" id="remove_offensive_destroyer">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_destroyer" id="offensive_destroyer"></td>
+							<td><input class="input_hits" type="text" id="offensive_destroyer_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_cruiser">Cruiser</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_cruiser">+</button>
+								<button class="btn btn-remove" id="remove_offensive_cruiser">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_cruiser" id="offensive_cruiser"></td>
+							<td><input class="input_hits" type="text" id="offensive_cruiser_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_aircraft_carrier">Aircraft Carrier</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_aircraft_carrier">+</button>
+								<button class="btn btn-remove" id="remove_offensive_aircraft_carrier">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_aircraft_carrier" id="offensive_aircraft_carrier"></td>
+							<td><input class="input_hits" type="text" id="offensive_aircraft_carrier_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="offensive_battleship">Battleship</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_offensive_battleship">+</button>
+								<button class="btn btn-remove" id="remove_offensive_battleship">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="offensive_battleship" step="0.5" id="offensive_battleship"></td>
+							<td><input class="input_hits" type="text" id="offensive_battleship_hits" disabled=""></td>
+						</tr>
+						<tr class="table_offensive">
+							<td></td>
+							<td></td>
+							<td class="table_head"><label for="offensive_total_hits"><b>TOTAL</b></label></td>
+							<td><input class="input_hits" type="text" id="offensive_total_hits" disabled=""></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col col-6">
+				<!-- DEFENSIVE -->
+				<table class="striped">
+
+					<thead class="table_defensive">
+						<tr>
+							<th><h3>Defensive</h3></th>
+							<th class="btn_col"></th>
+							<th class="table_head">UNITS</th>
+							<th class="table_head">HITS</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="table_label"><label for="defensive_infantry">Infantry</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_infantry">+</button>
+								<button class="btn btn-remove" id="remove_defensive_infantry">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_infantry" id="defensive_infantry"></td>
+							<td><input class="input_hits" type="text" id="defensive_infantry_hits" disabled=""></td>
+
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_artillery">Artillery</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_artillery">+</button>
+								<button class="btn btn-remove" id="remove_defensive_artillery">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_artillery" id="defensive_artillery"></td>
+							<td><input class="input_hits" type="text" id="defensive_artillery_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_tank">Tank</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_tank">+</button>
+								<button class="btn btn-remove" id="remove_defensive_tank">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_tank" id="defensive_tank"></td>
+							<td><input class="input_hits" type="text" id="defensive_tank_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_fighter">Figther</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_fighter">+</button>
+								<button class="btn btn-remove" id="remove_defensive_fighter">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_fighter" id="defensive_fighter"></td>
+							<td><input class="input_hits" type="text" id="defensive_fighter_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_bomber">Bomber</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_bomber">+</button>
+								<button class="btn btn-remove" id="remove_defensive_bomber">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_bomber" id="defensive_bomber"></td>
+							<td><input class="input_hits" type="text" id="defensive_bomber_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_submarine">Submarine</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_submarine">+</button>
+								<button class="btn btn-remove" id="remove_defensive_submarine">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_submarine" id="defensive_submarine"></td>
+							<td><input class="input_hits" type="text" id="defensive_submarine_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_destroyer">Destroyer</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_destroyer">+</button>
+								<button class="btn btn-remove" id="remove_defensive_destroyer">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_destroyer" id="defensive_destroyer"></td>
+							<td><input class="input_hits" type="text" id="defensive_destroyer_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_cruiser">Cruiser</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_cruiser">+</button>
+								<button class="btn btn-remove" id="remove_defensive_cruiser">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_cruiser" id="defensive_cruiser"></td>
+							<td><input class="input_hits" type="text" id="defensive_cruiser_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_aircraft_carrier">Aircraft Carrier</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_aircraft_carrier">+</button>
+								<button class="btn btn-remove" id="remove_defensive_aircraft_carrier">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" name="defensive_aircraft_carrier" id="defensive_aircraft_carrier"></td>
+							<td><input class="input_hits" type="text" id="defensive_aircraft_carrier_hits" disabled=""></td>
+						</tr>
+						<tr>
+							<td class="table_label"><label for="defensive_battleship">Battleship</label></td>
+							<td class="btn_col">
+								<button class="btn btn-add" id="add_defensive_battleship">+</button>
+								<button class="btn btn-remove" id="remove_defensive_battleship">-</button>
+							</td>
+							<td><input class="input_battle" type="number" inputmode="numeric" min="0" value="0" step="0.5" name="defensive_battleship" id="defensive_battleship"></td>
+							<td><input class="input_hits" type="text" id="defensive_battleship_hits" disabled=""></td>
+						</tr>
+						<tr class="table_defensive">
+							<td></td>
+							<td></td>
+							<td class="table_head"><label for="defensive_total_hits"><b>TOTAL</b></label></td>
+							<td><input class="input_hits" type="text" id="defensive_total_hits" disabled=""></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		$('#add_defensive_infantry').click(function() {
+			document.getElementById("defensive_infantry").value = parseInt(document.getElementById("defensive_infantry").value)+1;
+		});
+		$('#remove_defensive_infantry').click(function() {
+			if(parseInt(document.getElementById("defensive_infantry").value) > 0){
+				document.getElementById("defensive_infantry").value = parseInt(document.getElementById("defensive_infantry").value)-1;
+			}
+		});
+
+		$('#add_offensive_infantry').click(function() {
+			document.getElementById("offensive_infantry").value = parseInt(document.getElementById("offensive_infantry").value)+1;
+		});
+		$('#remove_offensive_infantry').click(function() {
+			if(parseInt(document.getElementById("offensive_infantry").value) > 0){
+				document.getElementById("offensive_infantry").value = parseInt(document.getElementById("offensive_infantry").value)-1;
+			}
+		});
+
+		$('#add_defensive_artillery').click(function() {
+			document.getElementById("defensive_artillery").value = parseInt(document.getElementById("defensive_artillery").value)+1;
+		});
+		$('#remove_defensive_artillery').click(function() {
+			if(parseInt(document.getElementById("defensive_artillery").value) > 0){
+				document.getElementById("defensive_artillery").value = parseInt(document.getElementById("defensive_artillery").value)-1;
+			}
+		});
+		$('#add_offensive_artillery').click(function() {
+			document.getElementById("offensive_artillery").value = parseInt(document.getElementById("offensive_artillery").value)+1;
+		});
+		$('#remove_offensive_artillery').click(function() {
+			if(parseInt(document.getElementById("offensive_artillery").value) > 0){
+				document.getElementById("offensive_artillery").value = parseInt(document.getElementById("offensive_artillery").value)-1;
+			}
+		});
+
+		$('#add_defensive_tank').click(function() {
+			document.getElementById("defensive_tank").value = parseInt(document.getElementById("defensive_tank").value)+1;
+		});
+		$('#remove_defensive_tank').click(function() {
+			if(parseInt(document.getElementById("defensive_tank").value) > 0){
+				document.getElementById("defensive_tank").value = parseInt(document.getElementById("defensive_tank").value)-1;
+			}
+		});
+
+		$('#add_offensive_tank').click(function() {
+			document.getElementById("offensive_tank").value = parseInt(document.getElementById("offensive_tank").value)+1;
+		});
+		$('#remove_offensive_tank').click(function() {
+			if(parseInt(document.getElementById("offensive_tank").value) > 0){
+				document.getElementById("offensive_tank").value = parseInt(document.getElementById("offensive_tank").value)-1;
+			}
+		});
+
+		$('#add_defensive_fighter').click(function() {
+			document.getElementById("defensive_fighter").value = parseInt(document.getElementById("defensive_fighter").value)+1;
+		});
+		$('#remove_defensive_fighter').click(function() {
+			if(parseInt(document.getElementById("defensive_fighter").value) > 0){
+				document.getElementById("defensive_fighter").value = parseInt(document.getElementById("defensive_fighter").value)-1;
+			}
+		});
+		$('#add_offensive_fighter').click(function() {
+			document.getElementById("offensive_fighter").value = parseInt(document.getElementById("offensive_fighter").value)+1;
+		});
+		$('#remove_offensive_fighter').click(function() {
+			if(parseInt(document.getElementById("offensive_fighter").value) > 0){
+				document.getElementById("offensive_fighter").value = parseInt(document.getElementById("offensive_fighter").value)-1;
+			}
+		});
+
+		$('#add_defensive_bomber').click(function() {
+			document.getElementById("defensive_bomber").value = parseInt(document.getElementById("defensive_bomber").value)+1;
+		});
+		$('#remove_defensive_bomber').click(function() {
+			if(parseInt(document.getElementById("defensive_bomber").value) > 0){
+				document.getElementById("defensive_bomber").value = parseInt(document.getElementById("defensive_bomber").value)-1;
+			}
+		});
+
+		$('#add_offensive_bomber').click(function() {
+			document.getElementById("offensive_bomber").value = parseInt(document.getElementById("offensive_bomber").value)+1;
+		});
+		$('#remove_offensive_bomber').click(function() {
+			if(parseInt(document.getElementById("offensive_bomber").value) > 0){
+				document.getElementById("offensive_bomber").value = parseInt(document.getElementById("offensive_bomber").value)-1;
+			}
+		});
+
+		$('#add_defensive_submarine').click(function() {
+			document.getElementById("defensive_submarine").value = parseInt(document.getElementById("defensive_submarine").value)+1;
+		});
+		$('#remove_defensive_submarine').click(function() {
+			if(parseInt(document.getElementById("defensive_submarine").value) > 0){
+				document.getElementById("defensive_submarine").value = parseInt(document.getElementById("defensive_submarine").value)-1;
+			}
+		});
+		$('#add_offensive_submarine').click(function() {
+			document.getElementById("offensive_submarine").value = parseInt(document.getElementById("offensive_submarine").value)+1;
+		});
+		$('#remove_offensive_submarine').click(function() {
+			if(parseInt(document.getElementById("offensive_submarine").value) > 0){
+				document.getElementById("offensive_submarine").value = parseInt(document.getElementById("offensive_submarine").value)-1;
+			}
+		});
+
+		$('#add_defensive_destroyer').click(function() {
+			document.getElementById("defensive_destroyer").value = parseInt(document.getElementById("defensive_destroyer").value)+1;
+		});
+		$('#remove_defensive_destroyer').click(function() {
+			if(parseInt(document.getElementById("defensive_destroyer").value) > 0){
+				document.getElementById("defensive_destroyer").value = parseInt(document.getElementById("defensive_destroyer").value)-1;
+			}
+		});
+
+		$('#add_offensive_destroyer').click(function() {
+			document.getElementById("offensive_destroyer").value = parseInt(document.getElementById("offensive_destroyer").value)+1;
+		});
+		$('#remove_offensive_destroyer').click(function() {
+			if(parseInt(document.getElementById("offensive_destroyer").value) > 0){
+				document.getElementById("offensive_destroyer").value = parseInt(document.getElementById("offensive_destroyer").value)-1;
+			}
+		});
+
+		$('#add_defensive_cruiser').click(function() {
+			document.getElementById("defensive_cruiser").value = parseInt(document.getElementById("defensive_cruiser").value)+1;
+		});
+		$('#remove_defensive_cruiser').click(function() {
+			if(parseInt(document.getElementById("defensive_cruiser").value) > 0){
+				document.getElementById("defensive_cruiser").value = parseInt(document.getElementById("defensive_cruiser").value)-1;
+			}
+		});
+		$('#add_offensive_cruiser').click(function() {
+			document.getElementById("offensive_cruiser").value = parseInt(document.getElementById("offensive_cruiser").value)+1;
+		});
+		$('#remove_offensive_cruiser').click(function() {
+			if(parseInt(document.getElementById("offensive_cruiser").value) > 0){
+				document.getElementById("offensive_cruiser").value = parseInt(document.getElementById("offensive_cruiser").value)-1;
+			}
+		});
+
+		$('#add_defensive_aircraft_carrier').click(function() {
+			document.getElementById("defensive_aircraft_carrier").value = parseInt(document.getElementById("defensive_aircraft_carrier").value)+1;
+		});
+		$('#remove_defensive_aircraft_carrier').click(function() {
+			if(parseInt(document.getElementById("defensive_aircraft_carrier").value) > 0){
+				document.getElementById("defensive_aircraft_carrier").value = parseInt(document.getElementById("defensive_aircraft_carrier").value)-1;
+			}
+		});
+		$('#add_offensive_aircraft_carrier').click(function() {
+			document.getElementById("offensive_aircraft_carrier").value = parseInt(document.getElementById("offensive_aircraft_carrier").value)+1;
+		});
+		$('#remove_offensive_aircraft_carrier').click(function() {
+			if(parseInt(document.getElementById("offensive_aircraft_carrier").value) > 0){
+				document.getElementById("offensive_aircraft_carrier").value = parseInt(document.getElementById("offensive_aircraft_carrier").value)-1;
+			}
+		});
+		$('#add_defensive_battleship').click(function() {
+			document.getElementById("defensive_battleship").value = parseInt(document.getElementById("defensive_battleship").value)+1;
+		});
+		$('#remove_defensive_battleship').click(function() {
+			if(parseInt(document.getElementById("defensive_battleship").value) > 0){
+				document.getElementById("defensive_battleship").value = parseInt(document.getElementById("defensive_battleship").value)-1;
+			}
+		});
+		$('#add_offensive_battleship').click(function() {
+			document.getElementById("offensive_battleship").value = parseInt(document.getElementById("offensive_battleship").value)+1;
+		});
+		$('#remove_offensive_battleship').click(function() {
+			if(parseInt(document.getElementById("offensive_battleship").value) > 0){
+				document.getElementById("offensive_battleship").value = parseInt(document.getElementById("offensive_battleship").value)-1;
+			}
+		});
+
+	</script>
+
+	<script>
+		//recupero la aleatoriedad
+		//utilizada para reducir la aleatoriedad de las batallas.
+		//Ejecuta la batalla x veces y hace la media
+		let randomness = 1;
+		function toggleConfiguration(){
+			let input_value = parseInt(window.prompt("Set randomness (1-1000):"));
+			if(input_value >= 1 && input_value <= 1000){
+				randomness = input_value;
+				document.getElementById("randomness_span").textContent = randomness;
+			}
+
+		}
+
+		const attacker_units_order = ["submarine","destroyer","cruiser","infantry","reinforced_infantry","artillery","tank", "fighter","bomber", "cruiser", "aircraft_carrier", "battleship"];
+		const two_hits_units = ["battleship"];
+		function debug(object){
+			console.log("DEBUG");
+			console.log(object);
+		}
+
+		class Army {
+			constructor(){
+				this.infantry = 0;
+				this.reinforced_infantry = 0;
+				this.artillery = 0;
+				this.tank = 0;
+				this.antiaircraft_artillery = 0;
+				this.fighter = 0;
+				this.bomber = 0;
+				this.submarine = 0;
+				this.destroyer = 0;
+				this.cruiser = 0;
+				this.aircraft_carrier = 0;
+				this.battleship = 0;
+				this.transport = 0;
+				this.truck = 0;
+				
+			}
+
+			fillWithArmy(army){
+				this.infantry = army.infantry;
+				this.reinforced_infantry = army.reinforced_infantry;
+				this.artillery = army.artillery;
+				this.tank = army.tank;
+				this.antiaircraft_artillery = army.antiaircraft_artillery;
+				this.fighter = army.fighter;
+				this.bomber = army.bomber;
+				this.submarine = army.submarine;
+				this.destroyer = army.destroyer;
+				this.cruiser = army.cruiser;
+				this.aircraft_carrier = army.aircraft_carrier;
+				this.battleship = army.battleship;
+				this.transport = army.transport;
+				this.truck = army.truck;
+			}
+
+			checkIfHasUnits(units_string){
+				let common_units = 0;	//incremento esta variable por cada unidad que coincida. Al final devuelvo la comparación entre este valor y el units_string
+
+				units_string.forEach(unit_string => {
+					if(this.getUnitsString().indexOf(unit_string) !== -1){
+						common_units++;
+					}
+				});
+
+				return common_units === units_string.length;
+			}
+
+			limitationsByString(unit){
+				switch(unit){
+					case "infantry":
+					case "reinforced_infantry":
+					case "artillery":
+					case "tank":
+						return [{"unit": "infantry", "required": null},{"unit": "reinforced_infantry", "required": null},
+								{"unit": "artillery", "required": null},{"unit": "tank", "required": null},
+								{"unit": "fighter", "required": null},{"unit": "bomber", "required": null},
+								{"unit": "truck", "required": null}];
+					case "fighter":
+					case "bomber":
+						return [{"unit": "infantry", "required": null},{"unit": "reinforced_infantry", "required": null},
+								{"unit": "artillery", "required": null},{"unit": "tank", "required": null},
+								{"unit": "fighter", "required": null},{"unit": "bomber", "required": null},
+								{"unit": "truck", "required": null}, {"unit": "submarine", "required": ["destroyer"]},
+								{"unit": "destroyer", "required": null},{"unit": "cruiser", "required": null},
+								{"unit": "aircraft_carrier", "required": null},{"unit": "battleship", "required": null}];
+					case "submarine":
+						return [{"unit": "submarine", "required": null},{"unit": "destroyer", "required": null},
+								{"unit": "cruiser", "required": null},{"unit": "aircraft_carrier", "required": null},
+								{"unit": "battleship", "required": null}];
+					case "destroyer":
+					case "aircraft_carrier":
+						return [{"unit": "fighter", "required": null},{"unit": "bomber", "required": null},
+								{"unit": "submarine", "required": null},{"unit": "destroyer", "required": null},
+								{"unit": "cruiser", "required": null},{"unit": "aircraft_carrier", "required": null},
+								{"unit": "battleship", "required": null}];
+					case "cruiser":
+					case "battleship":
+						return [{"unit": "infantry", "required": null},{"unit": "reinforced_infantry", "required": null},
+								{"unit": "artillery", "required": null},{"unit": "tank", "required": null},
+								{"unit": "fighter", "required": null},{"unit": "bomber", "required": null},
+								{"unit": "truck", "required": null}, {"unit": "submarine", "required": null},
+								{"unit": "destroyer", "required": null},{"unit": "cruiser", "required": null},
+								{"unit": "aircraft_carrier", "required": null},{"unit": "battleship", "required": null}];
+					case "transport":
+					case "truck":
+						return [{}];
+					
+				}
+			}
+
+			getUnitsString(){
+				let units = ["infantry", "reinforced_infantry", "artillery", "tank", "antiaircraft_artillery", 
+							"submarine", "destroyer", "fighter", "cruiser", "bomber", "aircraft_carrier", "battleship", 
+							"truck", "transport"];
+
+				let units_string = [];
+				units.forEach(unit => {
+					if(this.getByString(unit) > 0){
+						units_string.push(unit);
+					}
+				});
+
+				return units_string;
+			}
+
+			getByString(unit){
+				switch(unit){
+					case "infantry":
+						return this.infantry;
+					case "reinforced_infantry":
+						return this.reinforced_infantry;
+					case "artillery":
+						return this.artillery;
+					case "tank":
+						return this.tank;
+					case "fighter":
+						return this.fighter;
+					case "bomber":
+						return this.bomber;
+					case "submarine":
+						return this.submarine;
+					case "destroyer":
+						return this.destroyer;
+					case "cruiser":
+						return this.cruiser;
+					case "aircraft_carrier":
+						return this.aircraft_carrier;
+					case "battleship":
+						return this.battleship;
+					case "transport":
+						return this.transport;
+					case "truck":
+						return this.truck;
+				}
+			}
+
+			setByString(unit, x){
+				switch(unit){
+					case "infantry":
+						this.infantry = x;
+						break;
+					case "reinforced_infantry":
+						this.reinforced_infantry = x;
+						break;
+					case "artillery":
+						this.artillery = x;
+						break;
+					case "tank":
+						this.tank = x;
+						break;
+					case "fighter":
+						this.fighter = x;
+						break;
+					case "bomber":
+						this.bomber = x;
+						break;
+					case "submarine":
+						this.submarine = x;
+						break;
+					case "destroyer":
+						this.destroyer = x;
+						break;
+					case "cruiser":
+						this.cruiser = x;
+						break;
+					case "aircraft_carrier":
+						this.aircraft_carrier = x;
+						break;
+					case "battleship":
+						this.battleship = x;
+						break;
+					case "transport":
+						this.transport = x;
+						break;
+					case "truck":
+						this.truck = x;
+						break;
+				}
+			}
+
+			computeCasualties(attacker_units_hits, attacker_army){
+				//el orden con el que computan los hits para evitar que unidades queden libres. El orden es de cantidad de unidades a las qeu pueden atacar
+
+				let sort_by_cost = ["infantry", "reinforced_infantry", "artillery", "tank", "submarine", "destroyer", "fighter", "cruiser", "bomber", "aircraft_carrier", "battleship", "truck", "transport"];
+				let attack_units_string = attacker_units_hits.getUnitsString();
+				var attacker_units = attacker_units_order.filter(x => attack_units_string.indexOf(x) !== -1);
+
+				debug(attacker_units);
+
+				attacker_units.forEach(attacker_unit => {
+					let attacker_unit_hits = attacker_units_hits.getByString(attacker_unit);
+					//si esa unidad tiene hits
+					if(attacker_unit_hits > 0){
+						//itero en los disparos de cada unidad
+						for(let attacker_unit_index = 0; attacker_unit_index < attacker_unit_hits; attacker_unit_index++){
+							//dentro del bucle para ir actalizandose en cada unidad atacante
+							var defender_units = sort_by_cost.filter(x => this.getUnitsString().indexOf(x) !== -1);
+							debug(defender_units);
+							
+							
+							let attacker_units_limitation = attacker_units_hits.limitationsByString(attacker_unit);
+							console.log(attacker_unit);
+							debug(attacker_units_limitation);
+							//elijo la unidad defensiva como baja
+
+							let attacker_unit_has_hit = false;
+
+							defender_units.forEach(defender_unit => {
+								//comprobar que la unidad no haya disparado antes para evitar dos disparos de la misma unidad
+								if(attacker_unit_has_hit === false){
+									//itero en las limitaciones de unidad de unidades atacantes
+									attacker_units_limitation.forEach(attacker_unit_limitation => {
+										//comprobar que la unidad no haya disparado antes para evitar dos disparos de la misma unidad
+										if(attacker_unit_has_hit === false){
+											//compruebo si la unidad atacante puede disparar a la unidad defensiva
+											if(attacker_unit_limitation["unit"] === defender_unit){
+												//compruebo si es necesario algún requisito de unidades para efectuar el disparo
+												if(attacker_unit_limitation["required"] === null || attacker_army.checkIfHasUnits(attacker_unit_limitation["required"]) === true){
+													//doy baja
+													if(two_hits_units.indexOf(defender_unit) !== -1){
+														this.setByString(defender_unit, this.getByString(defender_unit)-0.5);
+													} else {
+														this.setByString(defender_unit, this.getByString(defender_unit)-1);
+													}
+													
+													console.log(attacker_unit + " hit " + defender_unit);
+													attacker_unit_has_hit = true;
+												} else {
+													console.log("requirements not complain");
+													attacker_units_hits.setByString(attacker_unit, 0);
+												}
+											}
+										}
+									});
+								}
+							});
+						}
+					}
+				});
+
+				//reestablezco la vida de las flotas con media vida
+				two_hits_units.forEach(two_hits_unit => {
+					this.setByString(two_hits_unit, Math.round(this.getByString(two_hits_unit)));
+				});
+			}
+
+			getUnits(){
+				return this.infantry + this.artillery + this.tank + this.fighter + this.bomber + this.submarine + this.destroyer + this.cruiser + this.aircraft_carrier + this.battleship + this.transport + this.truck + this.reinforced_infantry;
+			}
+		}
+
+		let defenseStats = {
+			"infantry": 2,
+			"artillery": 2,
+			"tank": 3,
+			"fighter": 4,
+			"bomber": 1,
+			"submarine": 1,
+			"destroyer": 2,
+			"cruiser": 3,
+			"aircraft_carrier": 2,
+			"battleship": 4,
+			"transport": 0,
+			"truck": 0,
+		}
+
+		let attackStats = {
+			"infantry": 1,	
+			"reinforced_infantry": 2,	//2 si es apoyada por artilleria
+			"artillery": 2,
+			"tank": 3,
+			"fighter": 3,
+			"bomber": 4,
+			"submarine": 2,
+			"destroyer": 2,
+			"cruiser": 3,
+			"aircraft_carrier": 1,
+			"battleship": 4,
+			"transport": 0,
+			"truck": 0,
+		}
+
+		function dice(){
+			return Math.floor(Math.random() * 6);
+		}
+
+		function calculate(){
+			//limpiando los hits
+			let inputs = document.getElementsByClassName("input_hits");
+			for(let i = 0; i < inputs.length; i++){
+				inputs[i].value = "";
+			}
+
+			//creando la armada de defensa
+			let defensiveArmy = new Army();
+			defensiveArmy.infantry = parseInt(document.getElementById("defensive_infantry").value);
+			defensiveArmy.artillery = parseInt(document.getElementById("defensive_artillery").value);
+			defensiveArmy.tank = parseInt(document.getElementById("defensive_tank").value);
+			defensiveArmy.fighter = parseInt(document.getElementById("defensive_fighter").value);
+			defensiveArmy.bomber = parseInt(document.getElementById("defensive_bomber").value);
+			defensiveArmy.submarine = parseInt(document.getElementById("defensive_submarine").value);
+			defensiveArmy.destroyer = parseInt(document.getElementById("defensive_destroyer").value);
+			defensiveArmy.cruiser = parseInt(document.getElementById("defensive_cruiser").value);
+			defensiveArmy.aircraft_carrier = parseInt(document.getElementById("defensive_aircraft_carrier").value);
+			defensiveArmy.battleship = parseInt(document.getElementById("defensive_battleship").value);
+
+			//creando la armada de ataque
+			let offensiveArmy = new Army();
+			offensiveArmy.infantry = parseInt(document.getElementById("offensive_infantry").value);
+			offensiveArmy.artillery = parseInt(document.getElementById("offensive_artillery").value);
+			offensiveArmy.tank = parseInt(document.getElementById("offensive_tank").value);
+			offensiveArmy.fighter = parseInt(document.getElementById("offensive_fighter").value);
+			offensiveArmy.bomber = parseInt(document.getElementById("offensive_bomber").value);
+			offensiveArmy.submarine = parseInt(document.getElementById("offensive_submarine").value);
+			offensiveArmy.destroyer = parseInt(document.getElementById("offensive_destroyer").value);
+			offensiveArmy.cruiser = parseInt(document.getElementById("offensive_cruiser").value);
+			offensiveArmy.aircraft_carrier = parseInt(document.getElementById("offensive_aircraft_carrier").value);
+			offensiveArmy.battleship = parseInt(document.getElementById("offensive_battleship").value);
+
+			let offensive_units = offensiveArmy.getUnits();
+			let defensive_units = defensiveArmy.getUnits();
+
+			console.log("Offensive units: " + offensive_units);
+			console.log(offensiveArmy);
+			console.log(" ");
+			console.log("Defensive units: " + defensive_units);
+			console.log(defensiveArmy);
+
+			//Comprobación de si hay infantería y artillería
+			//si es así, una unidad de infantería se convierte en una de artillería (por tema de probabilidad)
+			if(offensiveArmy.infantry > 0 && offensiveArmy.artillery > 0){
+				let enhanced_infantry_units = 0;
+				//si hay mas o igual numero de artillerías que infantería toda la infantería potencia
+				if(offensiveArmy.artillery > offensiveArmy.infantry){
+					enhanced_infantry_units = offensiveArmy.infantry;
+				//en el otro caso, se potenciarán el mismo numero que artillerías haya
+				} else {
+					enhanced_infantry_units = offensiveArmy.artillery;
+				}
+				offensiveArmy.infantry -= enhanced_infantry_units;
+				offensiveArmy.reinforced_infantry = enhanced_infantry_units;
+			}
+			console.log(offensiveArmy);
+
+			//attack turn
+			let offensive_hits = new Army();
+			for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
+				Object.keys(attackStats).forEach(unit => {
+					if(offensiveArmy.getByString(unit) > 0){
+						console.log("Unit: " + unit + " (" + offensiveArmy.getByString(unit) + ")");
+						for(let i = 0; i < offensiveArmy.getByString(unit); i++){
+							if(dice() <= attackStats[unit]){
+								console.log("\tHIT");
+								offensive_hits.setByString(unit, offensive_hits.getByString(unit)+1);
+							}
+						}
+					}
+				});
+			}
+
+			Object.keys(attackStats).forEach(unit => {
+				offensive_hits.setByString(unit, Math.round(offensive_hits.getByString(unit)/randomness));
+			});
+
+			//defense turn
+			let defensive_hits = new Army();
+			for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
+				Object.keys(attackStats).forEach(unit => {
+					if(defensiveArmy.getByString(unit) > 0){
+						console.log("Unit: " + unit + " (" + defensiveArmy.getByString(unit) + ")");
+						for(let i = 0; i < defensiveArmy.getByString(unit); i++){
+							if(dice() <= attackStats[unit]){
+								console.log("\tHIT");
+								defensive_hits.setByString(unit, defensive_hits.getByString(unit)+1);
+							}
+						}
+					}
+				});
+			}
+
+			Object.keys(attackStats).forEach(unit => {
+				defensive_hits.setByString(unit, Math.round(defensive_hits.getByString(unit)/randomness));
+			});
+			
+			console.log(offensive_hits);
+			console.log(defensive_hits);
+
+			console.log("Computing defensive casualties");
+			console.log(defensiveArmy);
+			let defensiveArmy_prev = new Army();	//usado para computar los hits de la armada ofensiva
+			defensiveArmy_prev.fillWithArmy(defensiveArmy)
+			defensiveArmy.computeCasualties(offensive_hits, offensiveArmy);
+
+			console.log("Computing offensive casualties");
+			console.log(offensiveArmy);
+			offensiveArmy.computeCasualties(defensive_hits, defensiveArmy_prev);
+
+			let total_offensive_hits = offensive_hits.getUnits();
+			let total_defensive_hits = defensive_hits.getUnits();
+
+			if(total_defensive_hits >= offensive_units){
+				console.log("Offensive casualties: " + "ALL");
+			} else {
+				console.log("Offensive casualties: " + total_defensive_hits);
+			}
+			if(total_offensive_hits >= defensive_units){
+				console.log("Defensive casualties: " + "ALL");
+			} else {
+				console.log("Defensive casualties: " + total_offensive_hits);
+			}
+
+			if(defensive_hits.infantry > 0){
+				document.getElementById("defensive_infantry_hits").value = defensive_hits.infantry;
+			}
+			if(defensive_hits.artillery > 0){
+				document.getElementById("defensive_artillery_hits").value = defensive_hits.artillery;
+			}
+			if(defensive_hits.tank > 0){
+				document.getElementById("defensive_tank_hits").value = defensive_hits.tank;
+			}
+			if(defensive_hits.fighter > 0){
+				document.getElementById("defensive_fighter_hits").value = defensive_hits.fighter;
+			}
+			if(defensive_hits.bomber > 0){
+				document.getElementById("defensive_bomber_hits").value = defensive_hits.bomber;
+			}
+			if(defensive_hits.submarine > 0){
+				document.getElementById("defensive_submarine_hits").value = defensive_hits.submarine;
+			}
+			if(defensive_hits.destroyer > 0){
+				document.getElementById("defensive_destroyer_hits").value = defensive_hits.destroyer;
+			}
+			if(defensive_hits.cruiser > 0){
+				document.getElementById("defensive_cruiser_hits").value = defensive_hits.cruiser;
+			}
+			if(defensive_hits.aircraft_carrier > 0){
+				document.getElementById("defensive_aircraft_carrier_hits").value = defensive_hits.aircraft_carrier;
+			}
+			if(defensive_hits.battleship > 0){
+				document.getElementById("defensive_battleship_hits").value = defensive_hits.battleship;
+			}
+
+			if(offensive_hits.reinforced_infantry > 0 || offensive_hits.infantry > 0){
+				document.getElementById("offensive_infantry_hits").value = offensive_hits.infantry + offensive_hits.reinforced_infantry;
+			}
+			if(offensive_hits.artillery > 0){
+				document.getElementById("offensive_artillery_hits").value = offensive_hits.artillery;
+			}
+			if(offensive_hits.tank > 0){
+				document.getElementById("offensive_tank_hits").value = offensive_hits.tank;
+			}
+			if(offensive_hits.fighter > 0){
+				document.getElementById("offensive_fighter_hits").value = offensive_hits.fighter;
+			}
+			if(offensive_hits.bomber > 0){
+				document.getElementById("offensive_bomber_hits").value = offensive_hits.bomber;
+			}
+			if(offensive_hits.submarine > 0){
+				document.getElementById("offensive_submarine_hits").value = offensive_hits.submarine;
+			}
+			if(offensive_hits.destroyer > 0){
+				document.getElementById("offensive_destroyer_hits").value = offensive_hits.destroyer;
+			}
+			if(offensive_hits.cruiser > 0){
+				document.getElementById("offensive_cruiser_hits").value = offensive_hits.cruiser;
+			}
+			if(offensive_hits.aircraft_carrier > 0){
+				document.getElementById("offensive_aircraft_carrier_hits").value = offensive_hits.aircraft_carrier;
+			}
+			if(offensive_hits.battleship > 0){
+				document.getElementById("offensive_battleship_hits").value = offensive_hits.battleship;
+			}
+
+			
+			document.getElementById("defensive_infantry").value = defensiveArmy.infantry;
+			document.getElementById("defensive_artillery").value = defensiveArmy.artillery;
+			document.getElementById("defensive_tank").value = defensiveArmy.tank;
+			document.getElementById("defensive_fighter").value = defensiveArmy.fighter;
+			document.getElementById("defensive_bomber").value = defensiveArmy.bomber;
+			document.getElementById("defensive_submarine").value = defensiveArmy.submarine;
+			document.getElementById("defensive_destroyer").value = defensiveArmy.destroyer;
+			document.getElementById("defensive_cruiser").value = defensiveArmy.cruiser;
+			document.getElementById("defensive_aircraft_carrier").value = defensiveArmy.aircraft_carrier;
+			document.getElementById("defensive_battleship").value = defensiveArmy.battleship;
+			document.getElementById("defensive_total_hits").value = total_defensive_hits;
+
+			document.getElementById("offensive_infantry").value = offensiveArmy.infantry + offensiveArmy.reinforced_infantry;
+			document.getElementById("offensive_artillery").value = offensiveArmy.artillery;
+			document.getElementById("offensive_tank").value = offensiveArmy.tank;
+			document.getElementById("offensive_fighter").value = offensiveArmy.fighter;
+			document.getElementById("offensive_bomber").value = offensiveArmy.bomber;
+			document.getElementById("offensive_submarine").value = offensiveArmy.submarine;
+			document.getElementById("offensive_destroyer").value = offensiveArmy.destroyer;
+			document.getElementById("offensive_cruiser").value = offensiveArmy.cruiser;
+			document.getElementById("offensive_aircraft_carrier").value = offensiveArmy.aircraft_carrier;
+			document.getElementById("offensive_battleship").value = offensiveArmy.battleship;
+			document.getElementById("offensive_total_hits").value = total_offensive_hits;
+			
+		}
+
+
+	</script>
+	<script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+
+</body></html>
