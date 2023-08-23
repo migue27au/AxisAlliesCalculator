@@ -259,15 +259,13 @@
 			</div>
 			<div class="col-2">
 				<div class="row">
-					<div class="col-8 randomness_div">
-						<span>Battles: <b><span id="randomness_span">1</span></b></span>
+					<div class="col-12 randomness_div">
+						<span onclick="toggleConfiguration()">Battles: <b><span id="randomness_span">1</span></b></span>
 					</div>
-					<div class="col-4" >
-						<div class="configuration">
-							<button id="boton-configuracion" onclick="toggleConfiguration()">
-								<img width="15px" height="15px" src="gear_50px.png">
-							</button>
-						</div>
+				</div>
+				<div class="row">
+					<div class="col-12 randomness_div">
+						<span onclick="riskModeChange()">Risk mode: <b><span id="risk_mode_span">True</span></b></span>
 					</div>
 				</div>
 			</div>
@@ -683,6 +681,9 @@
 		//utilizada para reducir la aleatoriedad de las batallas.
 		//Ejecuta la batalla x veces y hace la media
 		let randomness = 1;
+		let risk_mode = false;
+		document.getElementById("risk_mode_span").textContent = risk_mode;
+
 		function toggleConfiguration(){
 			let input_value = parseInt(window.prompt("Set randomness (1-1000):"));
 			if(input_value >= 1 && input_value <= 1000){
@@ -697,6 +698,12 @@
 		function debug(object){
 			console.log("DEBUG");
 			console.log(object);
+		}
+
+		function riskModeChange(){
+			risk_mode = !risk_mode;
+
+			document.getElementById("risk_mode_span").textContent = risk_mode;
 		}
 
 		class Army {
@@ -1028,62 +1035,90 @@
 			console.log("Defensive units: " + defensive_units);
 			console.log(defensiveArmy);
 
-			//Comprobación de si hay infantería y artillería
-			//si es así, una unidad de infantería se convierte en una de artillería (por tema de probabilidad)
-			if(offensiveArmy.infantry > 0 && offensiveArmy.artillery > 0){
-				let enhanced_infantry_units = 0;
-				//si hay mas o igual numero de artillerías que infantería toda la infantería potencia
-				if(offensiveArmy.artillery > offensiveArmy.infantry){
-					enhanced_infantry_units = offensiveArmy.infantry;
-				//en el otro caso, se potenciarán el mismo numero que artillerías haya
-				} else {
-					enhanced_infantry_units = offensiveArmy.artillery;
-				}
-				offensiveArmy.infantry -= enhanced_infantry_units;
-				offensiveArmy.reinforced_infantry = enhanced_infantry_units;
-			}
-			console.log(offensiveArmy);
 
-			//attack turn
 			let offensive_hits = new Army();
-			for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
-				Object.keys(attackStats).forEach(unit => {
-					if(offensiveArmy.getByString(unit) > 0){
-						console.log("Unit: " + unit + " (" + offensiveArmy.getByString(unit) + ")");
-						for(let i = 0; i < offensiveArmy.getByString(unit); i++){
-							if(dice() <= attackStats[unit]){
-								console.log("\tHIT");
-								offensive_hits.setByString(unit, offensive_hits.getByString(unit)+1);
-							}
-						}
-					}
-				});
-			}
-
-			Object.keys(attackStats).forEach(unit => {
-				offensive_hits.setByString(unit, Math.round(offensive_hits.getByString(unit)/randomness));
-			});
-
-			//defense turn
 			let defensive_hits = new Army();
-			for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
-				Object.keys(attackStats).forEach(unit => {
-					if(defensiveArmy.getByString(unit) > 0){
-						console.log("Unit: " + unit + " (" + defensiveArmy.getByString(unit) + ")");
-						for(let i = 0; i < defensiveArmy.getByString(unit); i++){
-							if(dice() <= attackStats[unit]){
-								console.log("\tHIT");
-								defensive_hits.setByString(unit, defensive_hits.getByString(unit)+1);
+
+			if(risk_mode === false){
+				//Comprobación de si hay infantería y artillería
+				//si es así, una unidad de infantería se convierte en una de artillería (por tema de probabilidad)
+				if(offensiveArmy.infantry > 0 && offensiveArmy.artillery > 0){
+					let enhanced_infantry_units = 0;
+					//si hay mas o igual numero de artillerías que infantería toda la infantería potencia
+					if(offensiveArmy.artillery > offensiveArmy.infantry){
+						enhanced_infantry_units = offensiveArmy.infantry;
+					//en el otro caso, se potenciarán el mismo numero que artillerías haya
+					} else {
+						enhanced_infantry_units = offensiveArmy.artillery;
+					}
+					offensiveArmy.infantry -= enhanced_infantry_units;
+					offensiveArmy.reinforced_infantry = enhanced_infantry_units;
+				}
+				console.log(offensiveArmy);
+
+				//attack turn
+				for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
+					Object.keys(attackStats).forEach(unit => {
+						if(offensiveArmy.getByString(unit) > 0){
+							console.log("Unit: " + unit + " (" + offensiveArmy.getByString(unit) + ")");
+							for(let i = 0; i < offensiveArmy.getByString(unit); i++){
+								if(dice() <= attackStats[unit]){
+									console.log("\tHIT");
+									offensive_hits.setByString(unit, offensive_hits.getByString(unit)+1);
+								}
 							}
 						}
-					}
+					});
+				}
+
+				Object.keys(attackStats).forEach(unit => {
+					offensive_hits.setByString(unit, Math.round(offensive_hits.getByString(unit)/randomness));
 				});
+
+				//defense turn
+				for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
+					Object.keys(attackStats).forEach(unit => {
+						if(defensiveArmy.getByString(unit) > 0){
+							console.log("Unit: " + unit + " (" + defensiveArmy.getByString(unit) + ")");
+							for(let i = 0; i < defensiveArmy.getByString(unit); i++){
+								if(dice() <= attackStats[unit]){
+									console.log("\tHIT");
+									defensive_hits.setByString(unit, defensive_hits.getByString(unit)+1);
+								}
+							}
+						}
+					});
+				}
+
+				Object.keys(attackStats).forEach(unit => {
+					defensive_hits.setByString(unit, Math.round(defensive_hits.getByString(unit)/randomness));
+				});
+
+			} else {
+				let units = offensiveArmy.infantry;
+				if (defensiveArmy.infantry > units){
+					units = defensiveArmy.infantry;
+				}
+
+				for(let randomness_index = 0; randomness_index < randomness; randomness_index++ ) {
+					console.log("random");
+					for(let tmp_i = 0; tmp_i < units; tmp_i++){
+						let attacker_dice = dice();
+						let defender_dice = dice();
+
+						if(attacker_dice > defender_dice){
+							offensive_hits.infantry++;
+
+						} else if(attacker_dice < defender_dice){
+							defensive_hits.infantry++;
+						}
+					}
+				}
+
+				offensive_hits.infantry = Math.round(offensive_hits.infantry/randomness);
+				defensive_hits.infantry = Math.round(defensive_hits.infantry/randomness);
 			}
 
-			Object.keys(attackStats).forEach(unit => {
-				defensive_hits.setByString(unit, Math.round(defensive_hits.getByString(unit)/randomness));
-			});
-			
 			console.log(offensive_hits);
 			console.log(defensive_hits);
 
@@ -1172,7 +1207,6 @@
 			if(offensive_hits.battleship > 0){
 				document.getElementById("offensive_battleship_hits").value = offensive_hits.battleship;
 			}
-
 			
 			document.getElementById("defensive_infantry").value = defensiveArmy.infantry;
 			document.getElementById("defensive_artillery").value = defensiveArmy.artillery;
